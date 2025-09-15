@@ -1,8 +1,10 @@
 package com.aurora.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.aurora.model.dto.ResourceRoleDTO;
 import com.aurora.mapper.RoleMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -16,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@Slf4j
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
 
 
@@ -37,6 +40,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         if (CollectionUtils.isEmpty(resourceRoleList)) {
             this.loadResourceRoleList();
+            log.info("从数据库加载权限资源:"+ JSON.toJSONString(resourceRoleList));
         }
         FilterInvocation fi = (FilterInvocation) object;
         String method = fi.getRequest().getMethod();
