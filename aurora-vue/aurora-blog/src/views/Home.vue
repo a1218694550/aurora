@@ -133,16 +133,22 @@ export default defineComponent({
     })
     const fetchTopAndFeatured = () => {
       api.getTopAndFeaturedArticles().then(({ data }) => {
-        data.data.topArticle.articleContent = markdownToHtml(data.data.topArticle.articleContent)
-          .replace(/<\/?[^>]*>/g, '')
-          .replace(/[|]*\n/, '')
-          .replace(/&npsp;/gi, '')
-        data.data.featuredArticles.forEach((item: any) => {
-          item.articleContent = markdownToHtml(item.articleContent)
+        if (data.data.topArticle) {
+          data.data.topArticle.articleContent = markdownToHtml(data.data.topArticle.articleContent)
             .replace(/<\/?[^>]*>/g, '')
             .replace(/[|]*\n/, '')
             .replace(/&npsp;/gi, '')
-        })
+        }
+        if (data.data.featuredArticles) {
+          data.data.featuredArticles.forEach((item: any) => {
+            if (item) {
+              item.articleContent = markdownToHtml(item.articleContent)
+                .replace(/<\/?[^>]*>/g, '')
+                .replace(/[|]*\n/, '')
+                .replace(/&npsp;/gi, '')
+            }
+          })
+        }
         articleStore.topArticle = data.data.topArticle
         articleStore.featuredArticles = data.data.featuredArticles
       })
@@ -159,17 +165,17 @@ export default defineComponent({
             size: pagination.size
           })
           .then(({ data }) => {
-            if (data.flag) {
-              data.data.records.forEach((item: any) => {
+            data.data.records.forEach((item: any) => {
+              if (item) {
                 item.articleContent = markdownToHtml(item.articleContent)
                   .replace(/<\/?[^>]*>/g, '')
                   .replace(/[|]*\n/, '')
                   .replace(/&npsp;/gi, '')
-              })
-              articleStore.articles = data.data.records
-              pagination.total = data.data.count
-              reactiveData.haveArticles = true
-            }
+              }
+            })
+            articleStore.articles = data.data.records
+            pagination.total = data.data.count
+            reactiveData.haveArticles = true
           })
       } else {
         fetchArticlesByCategoryId(userStore.tab)

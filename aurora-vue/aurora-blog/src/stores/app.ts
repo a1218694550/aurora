@@ -56,7 +56,7 @@ export const useAppStore = defineStore('appStore', {
   actions: {
     changeLocale(locale: string) {
       cookies.set('locale', locale, { expires: 7 })
-      i18n.global.locale = locale
+      i18n.global.locale.value = locale
     },
     initializeTheme(mode: string) {
       setTheme(mode)

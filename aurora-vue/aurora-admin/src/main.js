@@ -36,8 +36,16 @@ Vue.use(VueCalendarHeatmap)
 Vue.use(VueAxios, axios)
 Vue.component('v-chart', ECharts)
 Vue.prototype.$moment = dayjs
-mavonEditor.markdownIt.set({}).use(Md_Katex).use(mermaidPlugin);
-
+// mavonEditor.markdownIt.set({}).use(Md_Katex).use(mermaidPlugin);
+// 修复 mavonEditor markdownIt 配置
+Vue.use(mavonEditor, {
+  markdownIt: {
+    plugins: [
+      Md_Katex,
+      mermaidPlugin
+    ]
+  }
+})
 Vue.filter('date', function (value, formatStr = 'YYYY-MM-DD') {
   return dayjs(value).format(formatStr)
 })
