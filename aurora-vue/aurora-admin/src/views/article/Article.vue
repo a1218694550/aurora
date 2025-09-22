@@ -14,6 +14,15 @@
       <el-button type="danger" size="medium" @click="openModel" style="margin-left: 10px"> 发布文章 </el-button>
     </div>
     <mavon-editor ref="md" v-model="article.articleContent" @imgAdd="uploadImg" style="height: calc(100vh - 260px)" />
+    
+    <!-- AI聊天助手 -->
+    <AiChatPanel 
+      :articleContent="article.articleContent"
+      :articleTitle="article.articleTitle"
+      @content-generated="handleContentGenerated"
+      @content-optimized="handleContentOptimized"
+      @image-generated="handleImageGenerated" />
+    
     <el-dialog :visible.sync="addOrEdit" width="40%" top="3vh">
       <div class="dialog-title-container" slot="title">发布文章</div>
       <el-form label-width="80px" size="medium" :model="article">
@@ -141,7 +150,12 @@
 
 <script>
 import * as imageConversion from 'image-conversion'
+import AiChatPanel from '@/components/AiChatPanel.vue'
+
 export default {
+  components: {
+    AiChatPanel
+  },
   created() {
     const path = this.$route.path
     const arr = path.split('/')
@@ -413,6 +427,54 @@ export default {
     removeTag(item) {
       const index = this.article.tagNames.indexOf(item)
       this.article.tagNames.splice(index, 1)
+    },
+
+    // AI助手相关方法
+    handleContentGenerated(content) {
+      // 生成的内容替换或追加到文章内容
+      if (this.article.articleContent.trim() === '') {
+        this.article.articleContent = content
+      } else {
+        this.$confirm('是否要替换当前文章内容？', '提示', {
+          confirmButtonText: '替换',
+          cancelButtonText: '追加',
+          distinguishCancelAndClose: true,
+          type: 'warning'
+        }).then(() => {
+          // 替换内容
+          this.article.articleContent = content
+          this.$message.success('文章内容已替换')
+        }).catch(action => {
+          if (action === 'cancel') {
+            // 追加内容
+            this.article.articleContent += '\n\n' + content
+            this.$message.success('文章内容已追加')
+          }
+        })
+      }
+      
+      // 如果标题为空或为默认标题，尝试从生成内容中提取标题
+      if (this.article.articleTitle === this.$moment(new Date()).format('YYYY-MM-DD') || 
+          this.article.articleTitle.trim() === '') {
+        const titleMatch = content.match(/^#\s+(.+)$/m)
+        if (titleMatch) {
+          this.article.articleTitle = titleMatch[1].trim()
+        }
+      }
+    },
+
+    handleContentOptimized(content) {
+      this.article.articleContent = content
+      this.$message.success('文章格式已优化')
+    },
+
+    handleImageGenerated(imageMarkdown) {
+      // 将生成的图片插入到当前光标位置
+      if (this.$refs.md) {
+        const currentContent = this.article.articleContent
+        this.article.articleContent = currentContent + imageMarkdown
+      }
+      this.$message.success('图片已插入到文章中')
     }
   },
   computed: {

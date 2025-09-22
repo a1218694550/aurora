@@ -14,9 +14,9 @@ public class AuroraSpringbootApplication {
         SpringApplication.run(AuroraSpringbootApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+//    @Bean
+//    public RestTemplate restTemplate() {
+//        return new RestTemplate();
+//    }
 
 }

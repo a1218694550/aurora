@@ -20,7 +20,7 @@ function loadLocaleMessages(): {
 
 export const i18n = createI18n({
   legacy: false,
-  locale: cookies.get('locale') ? String(cookies.get('locale')) : 'en',
-  fallbackLocale: cookies.get('locale') ? String(cookies.get('locale')) : 'en',
+  locale: cookies.get('locale') ? String(cookies.get('locale')) : 'cn',
+  fallbackLocale: cookies.get('locale') ? String(cookies.get('locale')) : 'cn',
   messages: loadLocaleMessages()
 })
