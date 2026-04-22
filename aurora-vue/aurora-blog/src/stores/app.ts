@@ -50,7 +50,8 @@ export const useAppStore = defineStore('appStore', {
       tagCount: 0,
       NPTimeout: -1,
       loadingTimeout: -1,
-      aurora_bot_enable: true
+      aurora_bot_enable: true,
+      locale:'cn',
     }
   },
   actions: {

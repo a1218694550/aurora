@@ -109,5 +109,18 @@ export default {
   },
   accessArticle: (params: any) => {
     return axios.post('/api/articles/access', params)
+  },
+  // 扣子智能体相关接口
+  getCozeConfig: () => {
+    return axios.get('/api/coze/config')
+  },
+  sendMessageToCoze: (params: any) => {
+    return axios.post('/api/coze/chat', params)
+  },
+  getCozeConversation: (conversationId: string) => {
+    return axios.get(`/api/coze/conversation/${conversationId}`)
+  },
+  clearCozeConversation: (conversationId: string) => {
+    return axios.delete(`/api/coze/conversation/${conversationId}`)
   }
 }

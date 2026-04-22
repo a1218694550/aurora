@@ -591,6 +591,7 @@ export default {
 <style scoped>
 .ai-chat-panel {
   position: relative;
+  padding: 20px;
 }
 
 .ai-chat-toggle {

@@ -6,10 +6,11 @@ function resolve(dir) {
 module.exports = defineConfig({
   transpileDependencies: true,
   productionSourceMap: false,
+  outputDir: 'blog',
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://121.89.94.157:9080',
+        target: 'http://localhost:9080',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

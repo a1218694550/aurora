@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 dist
+aurora-vue/aurora-admin/admin
+aurora-vue/aurora-blog/blog
 
 .env.local
 .env.*.local
