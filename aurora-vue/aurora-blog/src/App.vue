@@ -31,6 +31,9 @@
   <teleport to="head">
     <title>{{ title }}</title>
   </teleport>
+
+  <!-- 扣子智能体组件 -->
+  <CozeAgent />
 </template>
 
 <script lang="ts">
@@ -45,9 +48,12 @@ import Dia from '@/components/Dia.vue'
 import AuroraNavigator from '@/components/AuroraNavigator.vue'
 import UserCenter from '@/components/UserCenter.vue'
 import api from './api/api'
+import CozeAgent from "@/components/CozeAgent/CozeAgent.vue";
+
 export default defineComponent({
   name: 'App',
   components: {
+    CozeAgent,
     HeaderMain,
     Footer,
     Dia,

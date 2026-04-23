@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.aurora.entity.Article;
 import com.aurora.entity.UserInfo;
 import com.aurora.model.dto.EmailDTO;
+import com.aurora.model.dto.WebsiteConfigDTO;
 import com.aurora.service.ArticleService;
+import com.aurora.service.AuroraInfoService;
 import com.aurora.service.UserInfoService;
 import com.aurora.util.EmailUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -37,11 +39,19 @@ public class SubscribeConsumer {
     private UserInfoService userInfoService;
 
     @Autowired
+    private AuroraInfoService auroraInfoService;
+
+    @Autowired
     private EmailUtil emailUtil;
 
     @RabbitHandler
     public void process(byte[] data) {
         Integer articleId = JSON.parseObject(new String(data), Integer.class);
+        WebsiteConfigDTO websiteConfigDTO = auroraInfoService.getWebsiteConfig();
+        String websiteTitle = "您关注的网站";
+        if (websiteConfigDTO != null){
+            websiteTitle = websiteConfigDTO.getWebsiteTitle();
+        }
         Article article = articleService.getOne(new LambdaQueryWrapper<Article>().eq(Article::getId, articleId));
         List<UserInfo> users = userInfoService.list(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getIsSubscribe, TRUE));
         List<String> emails = users.stream().map(UserInfo::getEmail).collect(Collectors.toList());
@@ -53,12 +63,14 @@ public class SubscribeConsumer {
             emailDTO.setTemplate("common.html");
             String url = websiteUrl + "/articles/" + articleId;
             if (article.getUpdateTime() == null) {
-                map.put("content", "花未眠的个人博客发布了新的文章，"
+                map.put("content", websiteTitle+"发布了新的文章，"
                         + "<a style=\"text-decoration:none;color:#12addb\" href=\"" + url + "\">点击查看</a>");
             } else {
-                map.put("content", "花未眠的个人博客对《" + article.getArticleTitle() + "》进行了更新，"
+                map.put("content", websiteTitle+"对《" + article.getArticleTitle() + "》进行了更新，"
                         + "<a style=\"text-decoration:none;color:#12addb\" href=\"" + url + "\">点击查看</a>");
             }
+            map.put("websiteTitle",websiteTitle);
+            map.put("websiteUrl",websiteUrl);
             emailDTO.setCommentMap(map);
             emailUtil.sendHtmlMail(emailDTO);
         }

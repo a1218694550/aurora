@@ -65,9 +65,6 @@
         </Sidebar>
       </div>
     </div>
-    
-    <!-- 扣子智能体组件 -->
-    <CozeAgent />
   </div>
 </template>
 
@@ -77,7 +74,6 @@ import { Feature, FeatureList } from '@/components/Feature'
 import { ArticleCard, HorizontalArticle } from '@/components/ArticleCard'
 import { Title } from '@/components/Title'
 import { Sidebar, Profile, RecentComment, TagBox, Notice, WebsiteInfo } from '@/components/Sidebar'
-import CozeAgent from '@/components/CozeAgent/CozeAgent.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import { useArticleStore } from '@/stores/article'
@@ -101,8 +97,7 @@ export default defineComponent({
     RecentComment,
     TagBox,
     Notice,
-    WebsiteInfo,
-    CozeAgent
+    WebsiteInfo
   },
   setup() {
     const appStore = useAppStore()

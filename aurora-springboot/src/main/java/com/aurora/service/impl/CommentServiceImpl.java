@@ -275,12 +275,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         EmailDTO emailDTO = new EmailDTO();
         Map<String, Object> map = new HashMap<>();
         if (comment.getIsReview().equals(TRUE)) {
+            WebsiteConfigDTO websiteConfigDTO = auroraInfoService.getWebsiteConfig();
+            String websiteTitle = "您关注的网站";
+            if (websiteConfigDTO != null){
+                websiteTitle = websiteConfigDTO.getWebsiteTitle();
+            }
+
             String url = websiteUrl + getCommentPath(comment.getType()) + topicId;
             if (Objects.isNull(comment.getParentId())) {
                 emailDTO.setEmail(userInfo.getEmail());
                 emailDTO.setSubject(COMMENT_REMIND);
                 emailDTO.setTemplate("owner.html");
                 String createTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(comment.getCreateTime());
+                map.put("websiteTitle", websiteTitle);
+                map.put("websiteUrl", websiteUrl);
                 map.put("time", createTime);
                 map.put("url", url);
                 map.put("title", title);
@@ -294,6 +302,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 emailDTO.setEmail(userInfo.getEmail());
                 emailDTO.setSubject(COMMENT_REMIND);
                 emailDTO.setTemplate("user.html");
+                map.put("websiteTitle", websiteTitle);
+                map.put("websiteUrl", websiteUrl);
                 map.put("url", url);
                 map.put("title", title);
                 String createTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(parentComment.getCreateTime());
